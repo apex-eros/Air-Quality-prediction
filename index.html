@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+          background-image: url('https://media.istockphoto.com/id/1146598796/photo/football-green-field-with-cloud-blue-sky-background-landscape-outdoor-sport.jpg?s=612x612&w=0&k=20&c=jF0g50w6vMbHRwmZ-uEbd2C9nNi-Zo_jIl0W2oUNMOo='); /* Path to your image */
+          background-size: cover; /* Image will cover the entire background */
+          background-position: center; /* Center the background image */
+        }
+      </style>
+       
+
+    <title>Air Quality Prediction - Home</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Air Quality Prediction</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <div class="container mt-5">
+        <center style="font-size: 30px;">WELCOME TO PREDICTION</center>
+
+    </div>
+    <center {
+        margin-bottom: 20px; /* Add margin-bottom to create space below h1 */
+    }</center>
+      
+    <div class="container">
+        <h2>AQI Prediction</h2>
+        <img src="https://tse3.mm.bing.net/th?id=OIP.KWnv1TmZVPF2uz3S5S28oAHaEK&pid=Api&P=0&h=180" alt="Description of the image">
+
+        <div>
+            <label for="location">Location:</label>
+            <select id="location">
+                <option value="0">Aundh</option>
+                <option value="1">Baner</option>
+                <option value="2">Deccan</option>
+                <option value="3">Hadapsar</option>
+                <option value="4">Koregaon Park</option>
+                <option value="5">Kothrud</option>
+                <option value="6">Pimple Saudagar</option>
+                <option value="7">Shivaji Nagar</option>
+                <option value="8">Sinhagad Road</option>
+            </select>
+        </div>
+        <div>
+            <label for="time">Time:</label>
+            <select id="time">
+                <option value="0">8:00</option>
+                <option value="1">12:00</option>
+                <option value="2">16:00</option>
+                <option value="3">20:00</option>
+            </select>
+        </div>
+        <button onclick="predictAQI()">Predict</button>
+        <div id="output"></div>
+    </div>
+    <h2 {
+        margin-top: 20px;
+    }h2> 
+
+    
+    <script>
+        let predictionMade = false;
+        function predictAQI() {
+            const location = document.getElementById("location").value;
+            const time = document.getElementById("time").value;
+
+            // Prepare the data to be sent in the request body
+            const requestData = {
+                location: location,
+                time: time
+            };
+
+            // Send location and time data to Flask server
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData) // Convert requestData to JSON string
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display predicted AQI
+                const outputDiv = document.getElementById("output");
+                // Check if data.predicted_aqi exists and is not null or undefined
+                if (data && data.predicted_aqi !== undefined && data.predicted_aqi !== null) {
+                // Set the inner text with the predicted AQI value
+                outputDiv.innerText = `Predicted AQI: ${data.predicted_aqi}`;
+                    if (!predictionMade) {
+                        outputDiv.insertAdjacentHTML('afterend', '<p>Air is essential, keep it beneficial</p>');
+                        predictionMade = true; // Update flag variable
+                    }
+                
+                } else {
+                // Set a message indicating that the predicted AQI is not available
+                outputDiv.innerText = "Predicted AQI not available";
+}
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        
+    </script>
+</body>
+</html>
